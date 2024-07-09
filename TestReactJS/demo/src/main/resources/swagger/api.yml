@@ -1,0 +1,160 @@
+openapi: 3.0.1
+info:
+  title: Patient Management API
+  description: API for managing patients
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+
+paths:
+  /patients:
+    get:
+      summary: Get a list of patients
+      operationId: getPatients
+      parameters:
+        - name: patientID
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: patientName
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: gender
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: age
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: email
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: phone
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of patients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Patient'
+
+    post:
+      summary: Create a new patient
+      operationId: createPatient
+      requestBody:
+        description: Patient object that needs to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+      responses:
+        '201':
+          description: Patient created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '400':
+          description: Invalid input
+
+  /patients/{patientID}:
+    get:
+      summary: Get a patient by ID
+      operationId: getPatientById
+      parameters:
+        - name: patientID
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A single patient
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '404':
+          description: Patient not found
+
+    put:
+      summary: Update an existing patient
+      operationId: updatePatient
+      parameters:
+        - name: patientID
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Updated patient object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+      responses:
+        '200':
+          description: Patient updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '400':
+          description: Invalid input
+        '404':
+          description: Patient not found
+
+    delete:
+      summary: Delete a patient by ID
+      operationId: deletePatient
+      parameters:
+        - name: patientID
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Patient deleted successfully
+        '404':
+          description: Patient not found
+
+components:
+  schemas:
+    Patient:
+      type: object
+      properties:
+        patientID:
+          type: integer
+        patientName:
+          type: string
+        gender:
+          type: string
+        age:
+          type: integer
+        email:
+          type: string
+        phone:
+          type: string
+      required:
+        - patientName
+        - gender
+        - age
+        - email
+        - phone
